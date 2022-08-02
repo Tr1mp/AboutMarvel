@@ -1,4 +1,8 @@
-import "./randomChar.scss";
+import React, { Component }  from 'react';
+
+import './randomChar.scss';
+import thor from '../../resources/img/thor.jpeg';
+import mjolnir from '../../resources/img/mjolnir.png';
 
 function RandomChar() {
     return (
