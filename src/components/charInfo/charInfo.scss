@@ -7,7 +7,7 @@
         position: relative;
         z-index: 5;
         background-color: #fff;
-        &-name {
+        &_name {
             font-weight: bold;
             font-size: 22px;
             line-height: 29px;
@@ -43,11 +43,11 @@
         font-size: 18px;
         line-height: 24px;
         margin-top: 10px;
-        &-list {
+        &_list {
             position: relative;
             margin-top: 10px;
         }
-        &-item {
+        &_item {
             width: 100%;
             padding: 0px 10px;
             line-height: 25px;
