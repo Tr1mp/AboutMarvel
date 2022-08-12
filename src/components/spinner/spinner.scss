@@ -1,0 +1,63 @@
+@keyframes ldio-crr9gnhcw4b {
+    0% { transform: translate(7.8px,74.1px) scale(0); }
+    25% { transform: translate(7.8px,74.1px) scale(0); }
+    50% { transform: translate(7.8px,74.1px) scale(1); }
+    75% { transform: translate(74.1px,74.1px) scale(1); }
+    100% { transform: translate(140.4px,74.1px) scale(1); }
+}
+@keyframes ldio-crr9gnhcw4b-r {
+    0% { transform: translate(140.4px,74.1px) scale(1); }
+    100% { transform: translate(140.4px,74.1px) scale(0); }
+}
+@keyframes ldio-crr9gnhcw4b-c {
+    0% { background: #da1c1c }
+    25% { background: #2f2f2f }
+    50% { background: #d64444 }
+    75% { background: #a0a0a0 }
+    100% { background: #da1c1c }
+}
+.ldio-crr9gnhcw4b div {
+    position: absolute;
+    width: 46.8px;
+    height: 46.8px;
+    border-radius: 50%;
+    transform: translate(74.1px,74.1px) scale(1);
+    background: #da1c1c;
+    animation: ldio-crr9gnhcw4b 4.761904761904762s infinite cubic-bezier(0,0.5,0.5,1);
+}
+.ldio-crr9gnhcw4b div:nth-child(1) {
+    background: #a0a0a0;
+    transform: translate(140.4px,74.1px) scale(1);
+    animation: ldio-crr9gnhcw4b-r 1.1904761904761905s infinite cubic-bezier(0,0.5,0.5,1), ldio-crr9gnhcw4b-c 4.761904761904762s infinite step-start;
+}.ldio-crr9gnhcw4b div:nth-child(2) {
+    animation-delay: -1.1904761904761905s;
+    background: #da1c1c;
+}.ldio-crr9gnhcw4b div:nth-child(3) {
+    animation-delay: -2.380952380952381s;
+    background: #a0a0a0;
+}.ldio-crr9gnhcw4b div:nth-child(4) {
+    animation-delay: -3.571428571428571s;
+    background: #d64444;
+}.ldio-crr9gnhcw4b div:nth-child(5) {
+    animation-delay: -4.761904761904762s;
+    background: #2f2f2f;
+}
+.loadingio-spinner-ellipsis-obk7z8sqeob {
+    width: 195px;
+    height: 195px;
+    
+    display: block;
+    overflow: hidden;
+    background: none;
+}
+.ldio-crr9gnhcw4b {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    transform-origin: 0 0;
+}
+.ldio-crr9gnhcw4b div { 
+    box-sizing: content-box; 
+}

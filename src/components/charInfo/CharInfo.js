@@ -1,62 +1,128 @@
-import "./charInfo.scss";
-import thor from '../../resources/img/thor.jpeg';
+import { Component } from "react";
 
-function CharInfo() {
+import "./charInfo.scss";
+import MarvelService from "../../services/MarvelService";
+import Spinner from "../spinner/Spinner";
+import ErrorMessage from "../errorMessage/ErrorMessage";
+import Skeleton from "../skeleton/Skeleton";
+
+class CharInfo extends Component {
+    state = {
+        char: null,
+        loading: false,
+        error: false
+    }
+    marvelService = new MarvelService();
+
+    componentDidMount() {
+        this.updateChar();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.charId !== prevProps.charId) {
+            this.updateChar();
+        }
+    }
+
+    updateChar = () => {
+        const {charId} = this.props
+        if (!charId){
+            return;
+        }   
+        this.onCharLoading();
+        this.marvelService
+            .getCharacter(charId)
+            .then(this.onCharLoaded)
+            .catch(this.onCharError)
+    }
+
+    onCharLoading = () => {
+        this.setState({
+            loading: true,
+            error: false
+        })
+    }
+
+    onCharLoaded = (char) => {
+        this.setState({
+            char: char,
+            loading: false,
+        })
+    }
+
+    onCharError = () => {
+        this.setState({
+            loading: false,
+            error: true
+        })
+    }
+
+    render() {
+        const {char, loading, error} = this.state;
+        
+        const skeleton = error || loading || char ? null : <Skeleton/>;
+        const errorMessage = error ? <ErrorMessage/> : null;
+        const loadingMessage = loading ? <Spinner/> : null;
+        const content = !(error || loading || !char) ? <View char={char}/> : null;
+        
+
+        return (
+            <div className="char__info">
+                {skeleton}
+                {errorMessage}
+                {loadingMessage}
+                {content}
+            </div>
+        )    
+    }
+}
+
+const View = ({char}) => {
+    const {name, thambnail, description, homepage, wiki, comicsList} = char;
+    const imgStyle = thambnail.includes("image_not_available") ? {objectFit: "unset"} : null;
+    const noComics = (  <li key={"00"}
+                            className="char__comics_item">
+                            Sorry, this character haven't comics. We are already creating story.
+                        </li>);
+
     return (
-        <div className="char__info">
+        <>
             <div className="char__basics">
-                <img src={thor} alt="thor"/>
+                <img src={thambnail} alt={name} style={imgStyle}/>
                 <div>
-                    <div className="char__info_name">Thor</div>
+                    <div className="char__info_name">{name}</div>
                     <div className="char__btns">
-                        <a href="#" className="button button__main">
+                        <a href={homepage} className="button button__main">
                             <div className="inner">homepage</div>
                         </a>
-                        <a href="#" className="button button__secondary">
+                        <a href={wiki} className="button button__secondary">
                             <div className="inner">Wiki</div>
                         </a>
                     </div>     
                 </div>
             </div>
             <div className="char__descr">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus dicta nemo animi saepe repellat optio nostrum veniam, error repellendus voluptatibus consectetur libero iure voluptate eaque harum dolore quae quis omnis.
+                   {description}
             </div>
             <div className="char__comics">
-                Comics:
-            </div>
-            <ul className="char__comics_list">
-                <li className="char__comics_item">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </li>
-                <li className="char__comics_item">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </li>
-                <li className="char__comics_item">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                </li>
-                <li className="char__comics_item">
-                    Lorem ipsum dolor sit amet consectetur.
-                </li>
-                <li className="char__comics_item">
-                    Lorem ipsum dolor sit.
-                </li>
-                <li className="char__comics_item">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </li>
-                <li className="char__comics_item">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </li>
-                <li className="char__comics_item">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                </li>
-                <li className="char__comics_item">
-                    Lorem ipsum dolor sit amet consectetur.
-                </li>
-                <li className="char__comics_item">
-                    Lorem ipsum dolor sit.
-                </li>
-            </ul>
-        </div>
+                    Comics:
+                </div>
+                <ul className="char__comics_list">
+                    {comicsList.length > 0 ? null : noComics}
+                    {
+                    comicsList.map((item, i)=> {
+                        if (i > 9) return;
+                        return(
+                            <li 
+                                key={i}
+                                className="char__comics_item">
+                                    {item.name}
+                            </li>
+                        )
+                    })}
+                    
+                </ul>
+        </>
     )
 }
 
