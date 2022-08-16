@@ -1,32 +1,57 @@
 import { Component } from 'react';
 
-import './charList.scss';
 import MarvelService from "../../services/MarvelService";
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
+import './charList.scss';
+
 class CharList extends Component {
+    marvelService = new MarvelService();
+
     state = {
         charList: [],
         loading: true,
         error: false,
+        offset: this.marvelService._baseCharOffset,
+        newItemLoading: false,
+        charsEnded: false
     }
 
-    marvelService = new MarvelService();
-
     componentDidMount() {
-        this.marvelService
-            .getAllCharacters()
+        this.onRequest();
+        window.addEventListener('scroll', this.updateCharByScroll);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.updateCharByScroll);
+    }
+
+    updateCharByScroll = () => {
+        const {newItemLoading, charsEnded} = this.state;
+        const pageEnded = (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 50);
+        if (pageEnded && !newItemLoading && !charsEnded) {
+            this.onRequest();
+            
+        }
+    }
+
+    onRequest = () => {
+        this.setState({newItemLoading: true})
+        this.marvelService.getAllCharacters(this.state.offset)
             .then(this.onCharListLoaded)
             .catch(this.onCharListError)
     }
 
-    onCharListLoaded = (charList) => {
-        this.setState({
-            charList,
+    onCharListLoaded = (newCharList) => {
+        this.setState(({offset, charList}) => ({
+            charList: [...charList, ...newCharList],
             loading: false,
             error: false,
-        })
+            offset: offset + 9,
+            newItemLoading: false,
+            charsEnded: newCharList.length < 9,
+        }))
     }
 
     onCharListError = () => {
@@ -58,20 +83,29 @@ class CharList extends Component {
     }
 
     render() {
-        const {charList, loading, error} = this.state;
+        const {charList, loading, error, newItemLoading, charsEnded} = this.state;
         
         const items = this.renderItems(charList);
         const errorMessage = error ? <ErrorMessage/> : null;
         const loadingMessage = loading ? <Spinner/> : null;
+        const itemsLoading = (newItemLoading) ? <Spinner/> : null;
+        const charsEndedMessage = charsEnded ? <h2 
+                                                style={{
+                                                    padding: "40px 185px", 
+                                                    fontWeight: "bold", 
+                                                    fontSize: 22, 
+                                                    lineHeight: "28px"}}> 
+                                                    Oops, we are out of characters
+                                                    </h2> : null
         
+
         return (
             <div className="char__list">
                 {items}
                 {errorMessage}
                 {loadingMessage}
-                <button className="button button__main button__long">
-                    <div className="inner">Load more</div>
-                </button>
+                {itemsLoading}
+                {charsEndedMessage}
             </div>
         )
     }
