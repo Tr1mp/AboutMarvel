@@ -111,12 +111,13 @@ const View = ({char}) => {
                     {comicsList.length > 0 ? null : noComics}
                     {
                     comicsList.map((item, i)=> {
+                        // eslint-disable-next-line
                         if (i > 9) return;
                         return(
                             <li 
                                 key={i}
                                 className="char__comics_item">
-                                    {item.name}
+                                    <a href={item.resourceURI}>{item.name}</a>
                             </li>
                         )
                     })}
