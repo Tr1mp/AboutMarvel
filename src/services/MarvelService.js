@@ -1,6 +1,4 @@
 
-
-
 class MarvelService {
     _url = 'https://gateway.marvel.com:443/v1/public/characters';
     _baseCharOffset = 210;
