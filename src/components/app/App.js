@@ -6,6 +6,8 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 import decoration from '../../resources/img/vision.png';
+import ComicsList from '../comicsList/ComicsList';
+import AppBanner from '../appBanner/AppBanner';
 
 const App = () => {
     const [selectedCharId, setCharId] = useState(null);
@@ -26,6 +28,8 @@ const App = () => {
                     </ErrorBoundary>
                 </div>
                 <img src={decoration} alt="vision" className="bg-decoration"/>
+                {/* <AppBanner/>
+                <ComicsList/> */}
             </main>
         </div>
     )

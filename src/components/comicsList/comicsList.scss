@@ -1,6 +1,9 @@
 @import '../../style/variables.scss';
 
 .comics {
+    &__list {
+        margin-top: 50px;
+    }
     &__grid {
         display: grid;
         grid-template-columns: repeat(4, auto);

@@ -1,24 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './charList.scss';
 
 const CharList = (props) => {
-    const marvelService = new MarvelService();
-
     const [charList, setCharList] = useState([]);
-    const [error, setError] = useState(false);
-    const [offset, setOffset] = useState(marvelService._baseCharOffset);
+    const [offset, setOffset] = useState(210);
     const [newItemLoading, setNewItemLoading] = useState(true);
     const [charsEnded, setCharsEnded] = useState(false);
 
+    const {loading, error, getAllCharacters, clearError} = useMarvelService();
+
     useEffect(() => {
-        window.addEventListener('scroll', updateCharByScroll);
-        return () => window.removeEventListener('scroll', updateCharByScroll);
+        window.addEventListener('scroll', loadOnScroll);
+        return () => window.removeEventListener('scroll', loadOnScroll);
     }, []);
     
     useEffect(() => {
@@ -27,31 +26,23 @@ const CharList = (props) => {
         }
     }, [newItemLoading])
 
-    const updateCharByScroll = () => {
-        const pageEnded = (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 50);
-        if (pageEnded) {
+    const loadOnScroll = () => {
+        if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 50) {
             setNewItemLoading(true);
         }
     }
 
     const onRequest = () => {
-        marvelService
-            .getAllCharacters(offset)
+        clearError();
+        getAllCharacters(offset)
             .then(onCharListLoaded)
-            .catch(onCharListError)
     }
 
     const onCharListLoaded = (newCharList) => {
         setCharList(charList => [...charList, ...newCharList]);
-        setError(false);
-        setOffset(offset => offset + 9);
-        setNewItemLoading(false);
+        setOffset(offset + 9);
         setCharsEnded(newCharList.length < 9);
-    }
-
-    const onCharListError = () => {
-        setError(true);
-        setNewItemLoading(true);
+        setNewItemLoading(false);
     }
 
     const itemsRef = useRef([]);
@@ -95,33 +86,29 @@ const CharList = (props) => {
         )
     }
 
-    const btnLoad = (  
+    const loadMore = (  
         <button className="button button__main button__long"
-                onClick={() => updateCharByScroll()}>
+                onClick={() => onRequest()}>
             <div className="inner">Load more</div>
         </button>
     )
 
     const charsEndedMessage = (
-        <h2 className='char__end_Message'> 
-            Oops, we are out of characters
+        <h2 className='message_end'> 
+            Oops, we couldn't come up with more characters
         </h2>
     )
-                    
-    
 
     const items = renderItems(charList);
     const errorMessage = error ? <ErrorMessage/> : null;
-    const itemsLoading = (newItemLoading) ? <Spinner/>  : btnLoad;
-    const printCharsEndedMessage = charsEnded ? charsEndedMessage : null
-    
+    const itemsLoading = loading ? <Spinner/>  : loadMore;
+    const endMessage = charsEnded ? charsEndedMessage : itemsLoading
 
     return (
         <div className="char__list">
             {items}
             {errorMessage}
-            {itemsLoading}
-            {printCharsEndedMessage}
+            {endMessage}
         </div>
     )
 }
