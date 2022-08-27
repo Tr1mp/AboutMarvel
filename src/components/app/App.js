@@ -1,37 +1,28 @@
-import {useState} from 'react';
+import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
+import { MainPage, ComicsPage } from "../pages";
 import AppHeader from "../appHeader/AppHeader";
-import RandomChar from "../randomChar/RandomChar";
-import CharList from "../charList/CharList";
-import CharInfo from "../charInfo/CharInfo";
-import ErrorBoundary from '../errorBoundary/ErrorBoundary';
-import decoration from '../../resources/img/vision.png';
-import ComicsList from '../comicsList/ComicsList';
-import AppBanner from '../appBanner/AppBanner';
+
+
 
 const App = () => {
-    const [selectedCharId, setCharId] = useState(null);
     
     return (
-        <div className="app">
-            <AppHeader/>
-            <main>
-                <ErrorBoundary>
-                    <RandomChar/>
-                </ErrorBoundary>
-                <div className="char__content">
-                    <ErrorBoundary>
-                        <CharList onCharSelected={(id) => setCharId(id)}/>
-                    </ErrorBoundary>
-                    <ErrorBoundary>
-                        <CharInfo charId={selectedCharId}/>
-                    </ErrorBoundary>
-                </div>
-                <img src={decoration} alt="vision" className="bg-decoration"/>
-                {/* <AppBanner/>
-                <ComicsList/> */}
-            </main>
-        </div>
+       <Router>
+            <div className="app">
+                <AppHeader/>
+                <main>
+                   <Switch>
+                        <Route exact path="/">
+                            <MainPage/>
+                        </Route>
+                        <Route exact path="/comics">
+                           <ComicsPage/>
+                        </Route>
+                   </Switch>
+                </main>
+            </div>
+       </Router>
     )
 }
 

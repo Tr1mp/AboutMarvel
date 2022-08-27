@@ -12,7 +12,7 @@ import Spinner from "../spinner/Spinner";
 const ComicsList = (props) => {
     const [comicsList, setComicsList] = useState([]);
     const [comicsEnded, setComicsEnded] = useState(false);
-    const [offset, setOffset] = useState(52760);
+    const [offset, setOffset] = useState(0);
     const [newItemLoading, setNewItemLoading] = useState(false);
 
     const {loading, error, getAllComics, clearError} = useMarvelService();
