@@ -48,6 +48,7 @@ const CharInfo = (props) => {
 const View = ({char}) => {
     const {name, thambnail, description, homepage, wiki, comicsList} = char;
     const imgStyle = (thambnail && thambnail.includes("image_not_available")) ? {objectFit: "unset"} : null;
+    const editDescr = description ? `${description.substr(0, 199)}...` : "Sorry, we don't know description for this character"
     const noComics = (  <li key={"00"}
                             className="char__comics_item">
                             Sorry, this character haven't comics. We are already creating story.

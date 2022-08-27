@@ -21,7 +21,7 @@ const useMarvelService = () => {
         return {
             id: char.id,
             name: char.name,
-            description: char.description ? `${char.description.substr(0, 199)}...` : "Sorry, we don't know description for this character",
+            description: char.description ? char.description : "Sorry, we don't know description for this character",
             thambnail: `${char.thumbnail.path}.${char.thumbnail.extension}`,
             homepage: char.urls[0].url,
             wiki: char.urls[1].url,
@@ -37,7 +37,7 @@ const useMarvelService = () => {
 
     const getComic = async (id) => {
         const res = await request(`${_urlComics}/${id}?apikey=${process.env.REACT_APP_API_KEY}`);
-        return _transformCharacter(res.data.results[0]);
+        return _transformComic(res.data.results[0]);
     }
 
     const _transformComic = (comic) => {

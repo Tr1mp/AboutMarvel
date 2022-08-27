@@ -53,6 +53,7 @@ const View = ({char}) => {
     const {thambnail, name, description, homepage, wiki} = char;
     const imgStyle = (thambnail && thambnail.includes("image_not_available")) ? {objectFit: "unset"} : null;
     const nameStyle = (name && name.length > 20) ? {fontSize: "20px"} : null;
+    const editedDescr = description && description.length > 199 ? `${description.substr(0, 199)}...` : description;
     return (
         <div className="randomchar__block">
             <img 
@@ -67,7 +68,7 @@ const View = ({char}) => {
                     style={nameStyle}
                 >{name}</p>
                 <p className="randomchar__descr">
-                    {description}
+                    {editedDescr}
                 </p>
                 <div className="randomchar__btns">
                     <a href={homepage} className="button button__main">

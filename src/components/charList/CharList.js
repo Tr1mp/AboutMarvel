@@ -55,7 +55,7 @@ const CharList = (props) => {
 
     function renderItems(arr) {
         const items = arr.map((item, i) => {
-            const imgStyle = item.thambnail.includes("image_not_available") ? {objectFit: "unset"} : null;
+            const imgStyle = item.thambnail && item.thambnail.includes("image_not_available") ? {objectFit: "unset"} : null;
             return (
                 <li 
                     ref={el => itemsRef.current[i] = el}
