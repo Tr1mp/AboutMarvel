@@ -21,7 +21,7 @@ const useMarvelService = () => {
         return {
             id: char.id,
             name: char.name,
-            description: char.description ? char.description : "Sorry, we don't know description for this character",
+            description: char.description ? char.description : "Sorry, we have not come up with a description for this character yet",
             thambnail: `${char.thumbnail.path}.${char.thumbnail.extension}`,
             homepage: char.urls[0].url,
             wiki: char.urls[1].url,
@@ -46,9 +46,9 @@ const useMarvelService = () => {
             title: comic.title,
             description: comic.description ? comic.description : "Sorry, we have not come up with a description for this comic yet",
             thambnail: `${comic.thumbnail.path}.${comic.thumbnail.extension}`,
-            pageCount: comic.pageCount ? `${comic.pageCount} p.` : "Sorry, we haven't written a single page yet",
+            pageCount: comic.pageCount ? `${comic.pageCount} p.` : "Sorry, we have not written a single page yet",
             language: comic.textObjects.language || 'en-us',
-            price: comic.prices[0].price ? `$${comic.prices[0].price}` : "Sorry, we didn't come up with a price tag for a priceless copy",
+            price: comic.prices[0].price ? `$${comic.prices[0].price}` : "Sorry, we did not come up with a price tag for a priceless copy",
         }
     }
 
