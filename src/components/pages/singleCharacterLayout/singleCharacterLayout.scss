@@ -1,7 +1,7 @@
-@import '../../style/variables.scss';
+@import '../../../style/variables.scss';
 
 .single {
-    &__comics {
+    &__char {
         margin-top: 50px;
         display: grid;
         grid-template-columns: 293px 550px auto;
@@ -10,6 +10,7 @@
         img {
             width: 293px;
             height: 450px;
+            object-fit: cover;
         }
     }
     &__info {
@@ -17,28 +18,12 @@
         font-size: 18px;
         line-height: 24px;
     }
-    &__title {
+    &__name {
         font-size: 22px;
         line-height: 28px;        
     }
     &__descr {
         margin-top: 25px;
         text-align: justify;
-    }
-    &__price {
-        margin-top: 25px;
-        font-size: 24px;
-        line-height: 32px;
-        color: $main-color;
-    }
-    &__btn {
-        transition: 0.3s transform;
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 24px;
-        &:hover {
-            color: $main-color;
-            transform: translateY(-5px);
-        }
     }
 }

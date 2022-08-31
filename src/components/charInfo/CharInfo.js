@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 
+import SearchChar from "../searchChar/SearchChar";
 import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
@@ -35,12 +36,16 @@ const CharInfo = (props) => {
     
 
     return (
-        <div className="char__info">
-            {skeleton}
-            {errorMessage}
-            {loadingMessage}
-            {content}
+        <div className="char__wrapper">
+            <div className="char__info">
+                {skeleton}
+                {errorMessage}
+                {loadingMessage}
+                {content}
+            </div>
+            <SearchChar/>
         </div>
+        
     )    
 
 }
@@ -48,8 +53,7 @@ const CharInfo = (props) => {
 const View = ({char}) => {
     const {name, thambnail, description, homepage, wiki, comicsList} = char;
     const imgStyle = (thambnail && thambnail.includes("image_not_available")) ? {objectFit: "unset"} : null;
-    const editDescr = description ? `${description.substr(0, 199)}...` : "Sorry, we don't know description for this character"
-    const noComics = (  <li key={"00"}
+    const noComics = (<li key={"00"}
                             className="char__comics_item">
                             Sorry, this character haven't comics. We are already creating story.
                         </li>);
@@ -95,6 +99,8 @@ const View = ({char}) => {
         </>
     )
 }
+
+
 
 CharInfo.propTypes = {
     charId: PropTypes.number

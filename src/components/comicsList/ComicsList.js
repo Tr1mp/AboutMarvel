@@ -58,7 +58,9 @@ const ComicsList = (props) => {
 
     function renderComics(arr) {
         const items = arr.map((item, i) => {
-
+            // const editedImg = item.thambnail && item.thambnail.includes("4c002e0305708.gif") ? 
+            //     'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' :
+            //     item.thambnail;
             const imgStyle = item.thambnail && item.thambnail.includes("image_not_available") ? {objectFit: "unset"} : null;
             const editedPrice = item.price && item.price.includes("$") ? item.price : "Not available";
             const editedTitle = item.title.length > 34 ? `${item.title.substr(0, 34)}...` : item.title;

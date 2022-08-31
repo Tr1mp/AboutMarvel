@@ -55,7 +55,8 @@ const CharList = (props) => {
 
     function renderItems(arr) {
         const items = arr.map((item, i) => {
-            const imgStyle = item.thambnail && item.thambnail.includes("image_not_available") ? {objectFit: "unset"} : null;
+            const imgStyle = item.thambnail && item.thambnail.includes("image_not_available") ?
+                {objectFit: "unset"} : null;
             return (
                 <li 
                     ref={el => itemsRef.current[i] = el}
@@ -101,7 +102,7 @@ const CharList = (props) => {
 
     const items = renderItems(charList);
     const errorMessage = error ? <ErrorMessage/> : null;
-    const itemsLoading = loading ? <Spinner/>  : loadMore;
+    const itemsLoading = loading ? <Spinner />  : loadMore;
     const endMessage = charsEnded ? charsEndedMessage : itemsLoading
 
     return (

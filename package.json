@@ -6,6 +6,9 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "formik": "^2.2.9",
+    "node": "16.16.0",
+    "npm": "8.11.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -13,8 +16,7 @@
     "react-scripts": "^5.0.1",
     "sass": "^1.54.0",
     "web-vitals": "^2.1.4",
-    "node": "16.16.0",
-    "npm": "8.11.0"
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

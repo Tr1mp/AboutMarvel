@@ -1,0 +1,45 @@
+@import '../../../style/variables.scss';
+
+.single {
+    &__comics {
+        margin-top: 50px;
+        display: grid;
+        grid-template-columns: 293px 550px auto;
+        column-gap: 50px;
+        align-items: start;
+        img {
+            width: 293px;
+            height: 450px;
+            object-fit: cover;
+        }
+    }
+    &__info {
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 24px;
+    }
+    &__title {
+        font-size: 22px;
+        line-height: 28px;        
+    }
+    &__descr {
+        margin-top: 25px;
+        text-align: justify;
+    }
+    &__price {
+        margin-top: 25px;
+        font-size: 24px;
+        line-height: 32px;
+        color: $main-color;
+    }
+    &__btn {
+        transition: 0.3s transform;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 24px;
+        &:hover {
+            color: $main-color;
+            transform: translateY(-5px);
+        }
+    }
+}
