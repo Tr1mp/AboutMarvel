@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 
-import "./singleComicLayout.scss";
+import "./singlePageLayout.scss";
 
-const SingleComicLayout = ({data, link}) => {
+const SinglePageLayout = ({data, link}) => {
     const {title, thambnail, description, language, pageCount, price, name} = data;
+    
     const imgStyle = thambnail.includes("image_not_available.jpg") ? {objectFit: "unset"} : null
+
     return (
         <div className="single__comics">
             <img 
@@ -23,4 +25,4 @@ const SingleComicLayout = ({data, link}) => {
     )
 }
 
-export default SingleComicLayout;
+export default SinglePageLayout;

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
@@ -50,7 +51,7 @@ const RandomChar = () => {
 }
 
 const View = ({char}) => {
-    const {thambnail, name, description, homepage, wiki} = char;
+    const {id, thambnail, name, description, homepage, wiki} = char;
     const imgStyle = (thambnail && thambnail.includes("image_not_available")) ? {objectFit: "unset"} : null;
     const nameStyle = (name && name.length > 20) ? {fontSize: "20px"} : null;
     const editedDescr = description && description.length > 199 ? `${description.substr(0, 199)}...` : description;
@@ -71,11 +72,11 @@ const View = ({char}) => {
                     {editedDescr}
                 </p>
                 <div className="randomchar__btns">
-                    <a href={homepage} className="button button__main">
+                    <Link to={`/characters/${id}`} className="button button__main">
                         <div className="inner">HOMEPAGE</div>
-                    </a>
-                    <a href={wiki} className="button button__secondary">
-                        <div className="inner">Wiki</div>
+                    </Link>
+                    <a href={homepage} className="button button__secondary">
+                        <div className="inner">marvel</div>
                     </a>
                 </div>
             </div>

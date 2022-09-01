@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet'
 
+
+import SinglePageLayout from "./singlePageLayout/SinglePageLayout";
 import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
+import AppBanner from "../appBanner/AppBanner";
 
-const SingleComicPage = ({Component, dataType}) => {
+const SingleComicPage = ({dataType}) => {
     const {id} = useParams();
     const [data, setData] = useState(null);
     const {loading, error, getComic, getCharacter, clearError} = useMarvelService();
@@ -28,15 +32,22 @@ const SingleComicPage = ({Component, dataType}) => {
     }
     const errorMessage = error ? <ErrorMessage/> : null;
     const loadingMessage = loading ? <Spinner/> : null;
-    const result = !(error || loading || !data) ? <Component data={data} link={dataType}/> : null;
+    const result = !(error || loading || !data) ? <SinglePageLayout data={data} link={dataType}/> : null;
     return (
         <>
+            <Helmet>
+                <meta
+                    name="description"
+                    content={data && data.description}
+                />
+                <title>{`${(data && data.title) || (data && data.name)} | C${dataType.substr(1)} | Marvel`}</title>
+            </Helmet>
+            <AppBanner/>
             {result}
             {loadingMessage}
             {errorMessage}
         </>
     )
 }
-
 
 export default SingleComicPage;

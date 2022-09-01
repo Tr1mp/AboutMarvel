@@ -9,9 +9,7 @@ const ErrorMessage = ({cusomStyle = null}) => {
                     width: "350px", height: "200px", 
                     objectFit: "contain", margin: "30px auto 0 auto", ...cusomStyle}}/>
         </div>
-        
     )
-    
 }
 
 export default ErrorMessage;

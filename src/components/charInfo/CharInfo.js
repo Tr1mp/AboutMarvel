@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import SearchChar from "../searchChar/SearchChar";
 import useMarvelService from "../../services/MarvelService";
@@ -51,13 +52,13 @@ const CharInfo = (props) => {
 }
 
 const View = ({char}) => {
-    const {name, thambnail, description, homepage, wiki, comicsList} = char;
+    const {id, name, thambnail, description, homepage, comicsList} = char;
     const imgStyle = (thambnail && thambnail.includes("image_not_available")) ? {objectFit: "unset"} : null;
     const noComics = (<li key={"00"}
                             className="char__comics_item">
                             Sorry, this character haven't comics. We are already creating story.
                         </li>);
-
+    
     return (
         <>
             <div className="char__basics">
@@ -65,11 +66,11 @@ const View = ({char}) => {
                 <div>
                     <div className="char__info_name">{name}</div>
                     <div className="char__btns">
-                        <a href={homepage} className="button button__main">
+                        <Link to={`/characters/${id}`} className="button button__main">
                             <div className="inner">homepage</div>
-                        </a>
-                        <a href={wiki} className="button button__secondary">
-                            <div className="inner">Wiki</div>
+                        </Link>
+                        <a href={homepage} className="button button__secondary">
+                            <div className="inner">marvel</div>
                         </a>
                     </div>     
                 </div>
@@ -86,11 +87,12 @@ const View = ({char}) => {
                     comicsList.map((item, i)=> {
                         // eslint-disable-next-line
                         if (i > 9) return;
+                        console.log(item.resourceURI.match(/\/\d*/));
                         return(
                             <li 
                                 key={i}
                                 className="char__comics_item">
-                                    <a href={item.resourceURI}>{item.name}</a>
+                                    <Link to={`/comics/${item.resourceURI.substr(43)}`}>{item.name}</Link>
                             </li>
                         )
                     })}

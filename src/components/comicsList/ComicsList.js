@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import "./comicsList.scss";
-
 import useMarvelService from "../../services/MarvelService";
-
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 
-
-
+import "./comicsList.scss";
 
 const ComicsList = (props) => {
     const [comicsList, setComicsList] = useState([]);
@@ -18,8 +14,6 @@ const ComicsList = (props) => {
     const [newItemLoading, setNewItemLoading] = useState(false);
 
     const {loading, error, getAllComics, clearError} = useMarvelService();
-
-
 
     useEffect(() => {
         onRequest()
@@ -58,9 +52,6 @@ const ComicsList = (props) => {
 
     function renderComics(arr) {
         const items = arr.map((item, i) => {
-            // const editedImg = item.thambnail && item.thambnail.includes("4c002e0305708.gif") ? 
-            //     'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' :
-            //     item.thambnail;
             const imgStyle = item.thambnail && item.thambnail.includes("image_not_available") ? {objectFit: "unset"} : null;
             const editedPrice = item.price && item.price.includes("$") ? item.price : "Not available";
             const editedTitle = item.title.length > 34 ? `${item.title.substr(0, 34)}...` : item.title;
@@ -102,7 +93,6 @@ const ComicsList = (props) => {
     )
 
     const items = renderComics(comicsList);
-
     
     const errorMessage = error ? <ErrorMessage/> : null;
     const itemsLoading = loading ? <Spinner/> : loadMore;
