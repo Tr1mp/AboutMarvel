@@ -1,11 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import useMarvelService from "../../services/MarvelService";
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+import LoadMoreBtn from '../../utils/LoadMoreBtn'
+import EndedMessage from '../../utils/EndedMessage';
 
 import './charList.scss';
+
+
+const setContent = (action, func, item) => {
+    const findProcess = {
+        'loading': <Spinner/>,
+        'loaded': <LoadMoreBtn func={func}/>,
+        'error': <ErrorMessage/>,
+        'end': <EndedMessage item={item}/>
+    }
+    return findProcess[action];
+}
 
 const CharList = (props) => {
     const [charList, setCharList] = useState([]);
@@ -13,17 +26,20 @@ const CharList = (props) => {
     const [newItemLoading, setNewItemLoading] = useState(true);
     const [charsEnded, setCharsEnded] = useState(false);
 
-    const {loading, error, getAllCharacters, clearError} = useMarvelService();
+    const {getAllCharacters, clearError, action, setAction} = useMarvelService();
 
     useEffect(() => {
+        onRequest();
         window.addEventListener('scroll', loadOnScroll);
         return () => window.removeEventListener('scroll', loadOnScroll);
+        // eslint-disable-next-line
     }, []);
     
     useEffect(() => {
         if (newItemLoading && !charsEnded) {
             onRequest();
         }
+        // eslint-disable-next-line
     }, [newItemLoading])
 
     const loadOnScroll = () => {
@@ -36,6 +52,7 @@ const CharList = (props) => {
         clearError();
         getAllCharacters(offset)
             .then(onCharListLoaded)
+            .then(end => end ? setAction('end') : setAction('loaded'));
     }
 
     const onCharListLoaded = (newCharList) => {
@@ -43,6 +60,7 @@ const CharList = (props) => {
         setOffset(offset + 9);
         setCharsEnded(newCharList.length < 9);
         setNewItemLoading(false);
+        return newCharList.length < 9;
     }
 
     const itemsRef = useRef([]);
@@ -87,29 +105,17 @@ const CharList = (props) => {
         )
     }
 
-    const loadMore = (  
-        <button className="button button__main button__long"
-                onClick={() => onRequest()}>
-            <div className="inner">Load more</div>
-        </button>
-    )
-
-    const charsEndedMessage = (
-        <h2 className='message_end'> 
-            Oops, we couldn't come up with more characters
-        </h2>
-    )
-
-    const items = renderItems(charList);
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const itemsLoading = loading ? <Spinner />  : loadMore;
-    const endMessage = charsEnded ? charsEndedMessage : itemsLoading
+    const items = useMemo(() => renderItems(charList), 
+        // eslint-disable-next-line
+        [charList]);
+    const element = useMemo(() => setContent(action, onRequest, 'characters'),
+        // eslint-disable-next-line
+        [action]);
 
     return (
         <div className="char__list">
             {items}
-            {errorMessage}
-            {endMessage}
+            {element}
         </div>
     )
 }

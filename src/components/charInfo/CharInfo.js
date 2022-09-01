@@ -1,20 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import SetContent from '../../utils/SetContent';
 import SearchChar from "../searchChar/SearchChar";
 import useMarvelService from "../../services/MarvelService";
-import Spinner from "../spinner/Spinner";
-import ErrorMessage from "../errorMessage/ErrorMessage";
-import Skeleton from "../skeleton/Skeleton";
+
 
 import "./charInfo.scss";
 
 const CharInfo = (props) => {
     const [char, setChar] = useState(null);
-    const {loading, error, getCharacter, clearError} = useMarvelService();
+    const {getCharacter, clearError, action, setAction} = useMarvelService();
     
-    useEffect(() => updateChar(), [props])
+    useEffect(() => updateChar(), 
+        // eslint-disable-next-line
+        [props])
 
     const updateChar = () => {
         const {charId} = props
@@ -24,38 +25,32 @@ const CharInfo = (props) => {
         clearError();
         getCharacter(charId)
             .then(onCharLoaded)
+            .then(() => setAction('loaded'));
     }
 
     const onCharLoaded = (char) => {
         setChar(char);
     }
 
-    const skeleton = error || loading || char ? null : <Skeleton/>;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const loadingMessage = loading ? <Spinner/> : null;
-    const content = !(error || loading || !char) ? <View char={char}/> : null;
-    
+    const element = useMemo(() => SetContent(action, View, char),
+        // eslint-disable-next-line
+        [action]);
 
     return (
         <div className="char__wrapper">
             <div className="char__info">
-                {skeleton}
-                {errorMessage}
-                {loadingMessage}
-                {content}
+                {element}
             </div>
             <SearchChar/>
         </div>
-        
     )    
-
 }
 
-const View = ({char}) => {
-    const {id, name, thambnail, description, homepage, comicsList} = char;
+const View = ({data}) => {
+    const {id, name, thambnail, description, homepage, comicsList} = data;
     const imgStyle = (thambnail && thambnail.includes("image_not_available")) ? {objectFit: "unset"} : null;
     const noComics = (<li key={"00"}
-                            className="char__comics_item">
+                            className="char__comics_item" style={{padding: '0 10px'}}>
                             Sorry, this character haven't comics. We are already creating story.
                         </li>);
     
@@ -87,7 +82,6 @@ const View = ({char}) => {
                     comicsList.map((item, i)=> {
                         // eslint-disable-next-line
                         if (i > 9) return;
-                        console.log(item.resourceURI.match(/\/\d*/));
                         return(
                             <li 
                                 key={i}

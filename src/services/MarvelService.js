@@ -5,7 +5,7 @@ const useMarvelService = () => {
     const _baseCharOffset = 210;
     const _urlComics = 'https://gateway.marvel.com:443/v1/public/comics';
     const _baseComicsOffset = 0;
-    const {loading, request, error, clearError} = useHttp();
+    const {request, clearError, action, setAction} = useHttp();
 
     const getAllCharacters = async (offset = _baseCharOffset) => {
         const res = await request(`${_urlChar}?limit=9&offset=${offset}&apikey=${process.env.REACT_APP_API_KEY}`);
@@ -51,7 +51,8 @@ const useMarvelService = () => {
         return {
             id: comic.id,
             title: comic.title,
-            description: comic.description ? comic.description : 
+            description: comic.description ? 
+                comic.description.replace(/<!--[\s\S]*?--!?>/g, ' ').replace(/<\/?[a-z][^>]*(>|$)/gi, ' ') : 
                 "Sorry, we have not come up with a description for this comic yet",
             thambnail: `${comic.thumbnail.path}`.includes("4c002e0305708") ? 
                 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' :
@@ -65,7 +66,14 @@ const useMarvelService = () => {
     }
 
 
-    return {loading, error, clearError, getAllCharacters, getCharacter, getCharacterByName, getAllComics, getComic};
+    return {clearError, 
+            action, 
+            setAction, 
+            getAllCharacters, 
+            getCharacter, 
+            getCharacterByName, 
+            getAllComics, 
+            getComic};
 }
 
 export default useMarvelService;

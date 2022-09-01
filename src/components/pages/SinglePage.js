@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo} from "react";
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet'
 
-
 import SinglePageLayout from "./singlePageLayout/SinglePageLayout";
 import useMarvelService from "../../services/MarvelService";
-import Spinner from "../spinner/Spinner";
-import ErrorMessage from "../errorMessage/ErrorMessage";
 import AppBanner from "../appBanner/AppBanner";
+import SetContent from "../../utils/SetContent";
 
 const SingleComicPage = ({dataType}) => {
     const {id} = useParams();
     const [data, setData] = useState(null);
-    const {loading, error, getComic, getCharacter, clearError} = useMarvelService();
+    const {getComic, getCharacter, clearError, action, setAction} = useMarvelService();
 
     useEffect(()=> {
         onRequest();
+        // eslint-disable-next-line
     }, [id])
 
     const onRequest = () => {
@@ -24,28 +23,30 @@ const SingleComicPage = ({dataType}) => {
             'comics': () => getComic(id).then(onLoaded),
             'characters': () => getCharacter(id).then(onLoaded)
         }
-        switcher[dataType]();
+        switcher[dataType]()
+            .then(() => setAction('loaded'));
     }
     
     const onLoaded = (data) => {
         setData(data);
     }
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const loadingMessage = loading ? <Spinner/> : null;
-    const result = !(error || loading || !data) ? <SinglePageLayout data={data} link={dataType}/> : null;
+
+    const element = useMemo(() => 
+        SetContent(action, SinglePageLayout, data, dataType), 
+        // eslint-disable-next-line
+        [action]);
+
     return (
         <>
             <Helmet>
                 <meta
                     name="description"
-                    content={data && data.description}
+                    content={(data && data.description) || "Error 404: Not Found"}
                 />
-                <title>{`${(data && data.title) || (data && data.name)} | C${dataType.substr(1)} | Marvel`}</title>
+                <title>{`${(data && data.title) || (data && data.name) || "Error 404: Not Found"} | C${dataType.substr(1)} | Marvel`}</title>
             </Helmet>
             <AppBanner/>
-            {result}
-            {loadingMessage}
-            {errorMessage}
+            {element}
         </>
     )
 }

@@ -1,30 +1,45 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
+import LoadMoreBtn from "../../utils/LoadMoreBtn";
+import EndedMessage from "../../utils/EndedMessage";
 
 import "./comicsList.scss";
 
-const ComicsList = (props) => {
+const setContent = (action, func, item) => {
+    const findProcess = {
+        'loading': <Spinner/>,
+        'loaded': <LoadMoreBtn func={func}/>,
+        'error': <ErrorMessage/>,
+        'end': <EndedMessage item={item}/>
+    }
+    return findProcess[action];
+}
+
+
+const ComicsList = () => {
     const [comicsList, setComicsList] = useState([]);
     const [comicsEnded, setComicsEnded] = useState(false);
     const [offset, setOffset] = useState(0);
     const [newItemLoading, setNewItemLoading] = useState(false);
 
-    const {loading, error, getAllComics, clearError} = useMarvelService();
+    const {getAllComics, clearError, action, setAction} = useMarvelService();
 
     useEffect(() => {
-        onRequest()
+        onRequest();
         window.addEventListener("scroll", loadOnScroll);
         return () => window.removeEventListener("scroll", loadOnScroll);
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         if (!comicsEnded && newItemLoading) {
             onRequest()
         }
+        // eslint-disable-next-line
     }, [newItemLoading]);
 
     const loadOnScroll = () => {
@@ -39,7 +54,8 @@ const ComicsList = (props) => {
         }
         clearError();
         getAllComics(offset)
-            .then(onComicsLoaded);
+            .then(onComicsLoaded)
+            .then(end => end ? setAction('and') : setAction('loaded'));
     }
 
     const onComicsLoaded = (newComicsList) => {
@@ -47,7 +63,7 @@ const ComicsList = (props) => {
         setComicsList(comicsList => [...comicsList, ...newComicsList]);
         setComicsEnded(newComicsList.length < 8);
         setOffset(offset => !(newComicsList.length < 8) ? offset + 8 : offset);
-
+        return newComicsList.length < 8
     }
 
     function renderComics(arr) {
@@ -78,30 +94,16 @@ const ComicsList = (props) => {
         )
     }
 
-    const loadMore = (
-        <a href="#" 
-            onClick={onRequest} 
-            className="button button__main button__long">
-                <div className="inner">Load More</div>
-        </a>
-    )
-
-    const comicsEndedMessage = (
-        <h2 className="message_end">
-            Oops, we couldn't come up with more comics
-        </h2>
-    )
-
-    const items = renderComics(comicsList);
-    
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const itemsLoading = loading ? <Spinner/> : loadMore;
-    const endMessage = comicsEnded ? comicsEndedMessage : itemsLoading;
+    const items = useMemo(() => renderComics(comicsList),
+        // eslint-disable-next-line
+        [comicsList]);
+    const element = useMemo(() => setContent(action, onRequest, 'comics'),
+        // eslint-disable-next-line
+        [action]);
     return (
         <div className="comics__list">
             {items}
-            {errorMessage}
-            {endMessage}
+            {element}
         </div>
     )
 }

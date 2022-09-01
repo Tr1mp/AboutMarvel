@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 import AppHeader from "../appHeader/AppHeader";
@@ -26,7 +26,8 @@ const App = () => {
                 <main>
                    <Suspense fallback={<Spinner/>}>
                     <Routes>
-                            <Route path="/" element={<MainPage/>}/>
+                            <Route path="/" element={<Navigate to="/characters" replace/>}/>
+                            <Route path="/characters" element={<MainPage/>}/>
                             <Route path="/comics" element={<ComicsPage/>}/>
                             <Route path="/characters/:id" element={<SinglePage dataType='characters'/>}/>
                             <Route path="/comics/:id" element={<SinglePage dataType='comics'/>}/>

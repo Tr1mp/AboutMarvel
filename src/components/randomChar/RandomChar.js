@@ -1,17 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from 'react-router-dom';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 import useMarvelService from "../../services/MarvelService";
-import Spinner from "../spinner/Spinner";
-import Error from "../errorMessage/ErrorMessage";
+import SetContent from "../../utils/SetContent";
 
 const RandomChar = () => {
     const [char, setChar] = useState({});
-    const {loading, error, clearError, getCharacter} = useMarvelService();
+    const {clearError, getCharacter, action, setAction} = useMarvelService();
 
-    useEffect(() => updateChar(), []);
+    useEffect(() => updateChar(), 
+        // eslint-disable-next-line
+        []);
 
     const onCharLoaded = (char) => {
         setChar(char);
@@ -21,18 +22,16 @@ const RandomChar = () => {
         clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         getCharacter(id)
-            .then(onCharLoaded);
+            .then(onCharLoaded)
+            .then(() => setAction("loaded"));
     }
 
-    const onError = error ? <Error/> : null;
-    const onLoading = loading ? <Spinner/> : null;
-    const rndChar = !(error || loading || !char) ? <View char={char}/> : null;
-
+    const element = useMemo(() => SetContent(action, View, char),
+        // eslint-disable-next-line
+        [action])
     return (
         <div className="randomchar">
-            {onError}
-            {onLoading}
-            {rndChar}
+            {element}
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br/>
@@ -50,8 +49,8 @@ const RandomChar = () => {
     )
 }
 
-const View = ({char}) => {
-    const {id, thambnail, name, description, homepage, wiki} = char;
+const View = ({data}) => {
+    const {id, thambnail, name, description, homepage} = data;
     const imgStyle = (thambnail && thambnail.includes("image_not_available")) ? {objectFit: "unset"} : null;
     const nameStyle = (name && name.length > 20) ? {fontSize: "20px"} : null;
     const editedDescr = description && description.length > 199 ? `${description.substr(0, 199)}...` : description;

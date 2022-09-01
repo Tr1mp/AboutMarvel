@@ -11,25 +11,26 @@ import './searchChar.scss';
 import Spinner from '../spinner/Spinner';
 
 const SearchChar = () => {
-    const {loading, error, getCharacterByName, clearError} = useMarvelService();
+    const {getCharacterByName, clearError, action, setAction} = useMarvelService();
     const [char, setChar] = useState(null);
 
     const onRequest = (name) => {
         clearError();
         getCharacterByName(name)
             .then(onCharLoaded)
+            .then(() => setAction('loaded'));
     }
 
     const onCharLoaded = (char) => {
         setChar(char);
     }
 
-    const ErrorMessagePrint = !error ? null :
+    const ErrorMessagePrint = action !== 'error' ? null :
         <div className='form__error_critical'>
             <ErrorMessage cusomStyle={{zoom: 0.5, margin: "-30px auto -50px auto"}}/>
         </div>
 
-    const result = error || !char ? null : 
+    const result = action === 'error' || !char ? null : 
             char.length > 0 ? 
                 <div className="form__wrapper">
                     <h2 className='form__seccsess'>There is! Visit <span>{char[0].name}</span> page?</h2> 
@@ -44,7 +45,7 @@ const SearchChar = () => {
 
     return (
         <div className="form">
-            <View onRequest={onRequest} loading={loading}/>
+            <View onRequest={onRequest} action={action}/>
             {result}
             {ErrorMessagePrint}
         </div>
@@ -52,8 +53,8 @@ const SearchChar = () => {
     )
 }
 
-const View = ({onRequest, loading}) => {
-    const btnLoadig = loading ? 
+const View = ({onRequest, action}) => {
+    const btnLoadig = action === 'loading' ? 
         <Spinner customStyle={{zoom: '0.5', margin: '0 auto'}}/> : 
             (<button 
                 className="button button__main" 
